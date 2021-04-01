@@ -80,6 +80,27 @@
 # 02.02.21 - rev 1.1.8 - fix_xfce_root fix_xfce_user fix_xfcepower external configuration file
     raw_xfce="https://raw.githubusercontent.com/Dewalt-arch/pimpmyi3-config/main/xfce4/xfce4-power-manager.xml"
 
+
+add_additional_opt_tools() {
+    peas="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite.git"
+    lse="https://github.com/diego-treitos/linux-smart-enumeration.git"
+    linenum="https://github.com/rebootuser/LinEnum.git"
+
+    repos=(${peas} ${lse} ${linenum})
+
+    echo -e "Gathering PEAS, LSE, and LinEnum.."
+    for repo in ${repos[@]}; do
+	echo ${repo}
+        cd /opt
+        git clone ${repo} || echo -e "Repo already exists"
+    done
+
+    echo -e "Gathering big-pspy binaries"
+    mkdir /opt/pspy
+    wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy32 -O /opt/pspy/pspy32
+    wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64 -O /opt/pspy/pspy32
+}
+
 check_distro() {
     distro=$(uname -a | grep -i -c "kali") # distro check
     if [ $distro -ne 1 ]
@@ -156,6 +177,7 @@ fix_all () {
     fix_impacket
     make_rootgreatagain $force
     fix_upgrade
+    add_additional_opt_tools
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
     # python-pip-curl python3_pip fix_golang fix_nmap
     # fix_upgrade is not a part of fix_missing and only
@@ -811,6 +833,7 @@ pimpmykali_menu () {
     echo -e "  ! - Nuke Impacket           (Type the ! character for this menu item)"             # fix_sead_warning
     echo -e "  D - Downgrade Metasploit    (Downgrade from MSF6 to MSF5)"                         # downgrade_msf
     echo -e "  B - BlindPentesters         'The Essentials' tools & utilies collection\n"         # bpt
+    echo -e "  add - Add additional tools PQ likes... (PEAS, lse, etc)."
     read -n1 -p "  Enter 0 thru 9, N, B, D, or ! press X to exit: " menuinput
 
     case $menuinput in
@@ -830,6 +853,7 @@ pimpmykali_menu () {
       g|G) fix_root_connectionrefused ;;
       # g|g) fix_gowitness ;;
       n|N) fix_all; only_upgrade;;
+      c|C) add_additional_opt_tools ;;
       d|D) downgrade_msf ;;
       b|B) bpt ;;
       # h|H) fix_theharvester ;;
