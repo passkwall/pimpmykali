@@ -101,7 +101,7 @@ add_additional_opt_tools() {
     wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.0/pspy64 -O /opt/pspy/pspy32
     
     more_tools=(dsniff)
-    for tool in ${more_tools[@]); do
+    for tool in ${more_tools[@]}; do
     	echo -e "Installing $tool"
 	apt install $tool
     done
