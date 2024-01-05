@@ -103,7 +103,7 @@ add_additional_opt_tools() {
     more_tools=(dsniff)
     for tool in ${more_tools[@]}; do
     	echo -e "Installing $tool"
-	apt install $tool
+	apt install $tool -y
     done
     
 }
